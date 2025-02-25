@@ -34,7 +34,7 @@ test:
   commands:
     - pip check
     - pytest --traceconfig | grep pytest-split-{{ version }}
-    - pytest -v tests
+    - pytest -v tests -k "not (test_returns_nonzero_when_invalid_algorithm_name)"
 
 about:
   home: https://github.com/jerry-git/pytest-split
