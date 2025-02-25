@@ -20,6 +20,7 @@ requirements:
     - setuptools-scm
     - poetry
     - pip
+    - wheel
   run:
     - python
     - pytest >=5.4
@@ -30,6 +31,8 @@ test:
   requires:
     - pip
     - pytest
+  imports:
+    - pytest_split
   commands:
     - pip check
     - pytest --traceconfig | grep pytest-split-{{ version }}
@@ -41,8 +44,8 @@ about:
   license_family: MIT
   license_file: LICENSE
   summary: pytest plugin to split tests based on execution time.
-  description: pytest plugin which splits the test suite to equally sized "sub suites" based on test execution time.
-
+  description: |
+    pytest plugin which splits the test suite to equally sized "sub suites" based on test execution time.
   doc_url: https://github.com/jerry-git/pytest-split
   dev_url: https://github.com/jerry-git/pytest-split
 
