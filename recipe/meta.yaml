@@ -1,5 +1,5 @@
 {% set name = "pytest-split" %}
-{% set version = "0.10.0" %}
+{% set version = "0.11.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,21 +7,22 @@ package:
 
 source:
   url: https://github.com/jerry-git/{{ name }}/archive/refs/tags/{{ version }}.tar.gz
-  sha256: ea57791544b034bf4cfae57cf2d036835c4e5a97b0a796da03c974c93106b264
+  sha256: 43b695c90d888fee2e66365a01d508aa5792727d7968892d790cebc0dd79afc9
 
 build:
   number: 0
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  skip: True  # [py<38]
+  skip: true  # [py<310]
 
 requirements:
   host:
     - python
-    - poetry-core >=1.0.0
+    - poetry-core
     - pip
   run:
     - python
     - pytest >=5,<9
+    - pytest >=5.0.0,<6.0.0|,>=6.0.0,<7.0.0|,>=7.0.0,<8.0.0|,>=8.0.0,<9.0.0|,>=9.0.0,<10.0.0
 
 test:
   source_files:
