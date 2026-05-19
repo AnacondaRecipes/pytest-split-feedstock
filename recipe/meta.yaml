@@ -33,7 +33,13 @@ test:
     - pytest_split
   commands:
     - pip check
-    - pytest --traceconfig | grep pytest-split-{{ version }}
+    # Verify pytest-split is registered as a pytest plugin via its `pytest11`
+    # entry point (not just importable). We query importlib.metadata directly
+    # instead of grepping `pytest --traceconfig` output, which is unstable
+    # across pytest versions and silently no-ops under `set -e` when the
+    # version string drifts. .load() also catches a registered-but-broken
+    # entry point.
+    - python -c "from importlib.metadata import entry_points; eps=[ep for ep in entry_points(group='pytest11') if ep.name=='pytest-split']; assert eps, list(entry_points(group='pytest11')); ep=eps[0].load(); assert ep.__name__=='pytest_split.plugin', ep.__name__"
     - pytest -v tests -k "not (test_returns_nonzero_when_invalid_algorithm_name)"
 
 about:
