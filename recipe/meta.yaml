@@ -1,5 +1,5 @@
 {% set name = "pytest-split" %}
-{% set version = "0.10.0" %}
+{% set version = "0.11.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,12 +7,12 @@ package:
 
 source:
   url: https://github.com/jerry-git/{{ name }}/archive/refs/tags/{{ version }}.tar.gz
-  sha256: ea57791544b034bf4cfae57cf2d036835c4e5a97b0a796da03c974c93106b264
+  sha256: 43b695c90d888fee2e66365a01d508aa5792727d7968892d790cebc0dd79afc9
 
 build:
   number: 0
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  skip: True  # [py<38]
+  skip: true  # [py<310]
 
 requirements:
   host:
@@ -21,7 +21,7 @@ requirements:
     - pip
   run:
     - python
-    - pytest >=5,<9
+    - pytest >=5,<10
 
 test:
   source_files:
@@ -33,7 +33,13 @@ test:
     - pytest_split
   commands:
     - pip check
-    - pytest --traceconfig | grep pytest-split-{{ version }}
+    # Verify pytest-split is registered as a pytest plugin via its `pytest11`
+    # entry point (not just importable). We query importlib.metadata directly
+    # instead of grepping `pytest --traceconfig` output, which is unstable
+    # across pytest versions and silently no-ops under `set -e` when the
+    # version string drifts. .load() also catches a registered-but-broken
+    # entry point.
+    - python -c "from importlib.metadata import entry_points; eps=[ep for ep in entry_points(group='pytest11') if ep.name=='pytest-split']; assert eps, list(entry_points(group='pytest11')); ep=eps[0].load(); assert ep.__name__=='pytest_split.plugin', ep.__name__"
     - pytest -v tests -k "not (test_returns_nonzero_when_invalid_algorithm_name)"
 
 about:
