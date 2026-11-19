@@ -1,0 +1,11 @@
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -33,7 +33,7 @@
+ 
+ [tool.poetry.dependencies]
+ python = ">=3.10, <4.0"
+-pytest = "^5 | ^6 | ^7 | ^8 | ^9"
++pytest = ">=5,<10"
+ 
+ 
+ [tool.poetry.group.dev.dependencies]
