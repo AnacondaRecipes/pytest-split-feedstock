@@ -8,6 +8,11 @@ package:
 source:
   url: https://github.com/jerry-git/{{ name }}/archive/refs/tags/{{ version }}.tar.gz
   sha256: 43b695c90d888fee2e66365a01d508aa5792727d7968892d790cebc0dd79afc9
+  patches:
+    # poetry renders the OR constraint ^5 | ^6 | ... | ^9 as
+    # "pytest (>=5,<6 || >=6,<7 ...)" in Requires-Dist, which current pip's
+    # strict PEP 508 parser rejects while installing the project.
+    - patches/pytest-range.patch
 
 build:
   number: 1
